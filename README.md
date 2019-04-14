@@ -43,3 +43,4 @@ func (mybot *PingPongBot) handlePing(message, room, sender string) {
 }
 
 ```
+![screenshot](scrot.png "Screenshot")
