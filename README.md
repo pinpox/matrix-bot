@@ -33,7 +33,7 @@ func main() {
 	bot.RegisterCommand("!ping", 0, mypingPongBot.handlePing)
 
 	for {
-		//Loop foreever. If you don't have anything that keeps running, the bot will exit.
+		//Loop forever. If you don't have anything that keeps running, the bot will exit.
 	}
 }
 
