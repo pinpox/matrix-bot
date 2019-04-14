@@ -11,7 +11,7 @@ package main
 
 import 	"github.com/binaryplease/matrix-bot"
 
-//PingPongBot is a custom bot that will reply to !ping with "pong"
+// PingPongBot is a custom bot that will reply to !ping with "pong"
 type PingPongBot struct {
 	*matrixbot.MatrixBot
 }
@@ -29,7 +29,7 @@ func main() {
 
 	mypingPongBot := PingPongBot{bot}
   
-  // Register a command like this
+        // Register a command like this
 	bot.RegisterCommand("!ping", 0, mypingPongBot.handlePing)
 
 	for {
@@ -37,7 +37,7 @@ func main() {
 	}
 }
 
-//handles the !ping message
+// Handles the !ping message
 func (mybot *PingPongBot) handlePing(message, room, sender string) {
 	mybot.SendToRoom(room, "pong!")
 }
