@@ -1,5 +1,6 @@
 # matrix-bot
 BYOB (Build your own bot) - Build a matrix bot that acts on !commands
+![screenshot](scrot.png "Screenshot")
 
 ## Usage
 Here is a minimal example on how to build a custom bot that replies to a message "!ping" with "pong".
@@ -43,4 +44,3 @@ func (mybot *PingPongBot) handlePing(message, room, sender string) {
 }
 
 ```
-![screenshot](scrot.png "Screenshot")
