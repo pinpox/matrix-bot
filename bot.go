@@ -2,9 +2,10 @@ package matrixbot
 
 import (
 	"fmt"
-	"github.com/matrix-org/gomatrix"
 	"regexp"
 	"strings"
+
+	"github.com/matrix-org/gomatrix"
 )
 
 //MatrixBot struct to hold the bot and it's methods
@@ -30,6 +31,9 @@ type CommandHandler struct {
 }
 
 func (gb *MatrixBot) getSenderPower(sender string) int {
+	// gomatrix: get "m.room.power_levels" type state event, parse it and find users->userID or use users_default if not found
+
+	// getting the state event: client.StateEvent(room, type, stateKey)
 	//TODO
 	return 100
 }
@@ -71,6 +75,20 @@ func (gb *MatrixBot) SendToRoom(room, message string) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func (bot *MatrixBot) Sync() {
+
+	//Spawn goroutine to keep checking for events
+	// go func() {
+	// 	for {
+	if err := bot.Client.Sync(); err != nil {
+		fmt.Println("Sync() returned ", err)
+	}
+	// Optional: Wait a period of time before trying to sync again.
+	// }
+	// }()
+
 }
 
 //NewMatrixBot creates a new bot form user credentials
@@ -123,16 +141,6 @@ func NewMatrixBot(user, pass string) (*MatrixBot, error) {
 			}
 		}
 	})
-
-	//Spawn goroutine to keep checking for events
-	go func() {
-		for {
-			if err := cli.Sync(); err != nil {
-				fmt.Println("Sync() returned ", err)
-			}
-			// Optional: Wait a period of time before trying to sync again.
-		}
-	}()
 
 	return bot, nil
 }
