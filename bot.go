@@ -1,7 +1,7 @@
 package matrixbot
 
 import (
-	"fmt"
+	log "github.com/sirupsen/logrus"
 	"regexp"
 	"strconv"
 	"strings"
@@ -22,6 +22,7 @@ type MatrixBot struct {
 //CommandHandler struct to hold a pattern/command asocciated with the
 //handling funciton and the needed minimum power of the user in the room
 type CommandHandler struct {
+
 	//The pattern or command to handle
 	Pattern string
 
@@ -35,7 +36,7 @@ type CommandHandler struct {
 	Help string
 }
 
-func (gb *MatrixBot) getSenderPower(sender string) int {
+func (bot *MatrixBot) getSenderPower(sender string) int {
 	// gomatrix: get "m.room.power_levels" type state event, parse it and find users->userID or use users_default if not found
 
 	// getting the state event: client.StateEvent(room, type, stateKey)
@@ -51,7 +52,7 @@ func (bot *MatrixBot) RegisterCommand(pattern string, minpower int, help string,
 		Handler:  handler,
 		Help:     help,
 	}
-	fmt.Println("Registered command: " + mbch.Pattern)
+	log.Debugf("Registered command: %s", mbch.Pattern)
 	bot.Handlers = append(bot.Handlers, mbch)
 }
 
@@ -76,31 +77,24 @@ func (bot *MatrixBot) handleCommands(message, room, sender string) {
 }
 
 //SendToRoom sends a message to a specified room
-func (gb *MatrixBot) SendToRoom(room, message string) {
-	_, err := gb.Client.SendText(room, message)
+func (bot *MatrixBot) SendToRoom(room, message string) {
+	_, err := bot.Client.SendText(room, message)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
+//Sync syncs the matrix events
 func (bot *MatrixBot) Sync() {
-
-	//Spawn goroutine to keep checking for events
-	// go func() {
-	// 	for {
 	if err := bot.Client.Sync(); err != nil {
-		fmt.Println("Sync() returned ", err)
+		log.Warningf("Sync() returned %s", err)
 	}
-	// Optional: Wait a period of time before trying to sync again.
-	// }
-	// }()
-
 }
 
 //NewMatrixBot creates a new bot form user credentials
 func NewMatrixBot(user, pass string, name string) (*MatrixBot, error) {
 
-	fmt.Println("Logging in")
+	log.Infof("Logging in as %s", user)
 
 	cli, _ := gomatrix.NewClient("http://matrix.org", "", "")
 
@@ -128,23 +122,20 @@ func NewMatrixBot(user, pass string, name string) (*MatrixBot, error) {
 
 	//Handle messages send to the channel
 	syncer.OnEventType("m.room.message", func(ev *gomatrix.Event) {
-		fmt.Println(ev.Sender + " said: \"" + ev.Content["body"].(string) + "\" in room : " + ev.RoomID)
+		log.Debugf("%s said \"%s\" in room %s", ev.Sender, ev.Content["body"], ev.RoomID)
 		bot.handleCommands(ev.Content["body"].(string), ev.RoomID, ev.Sender)
 
 	})
 
 	//Handle member events (kick, invite)
 	syncer.OnEventType("m.room.member", func(ev *gomatrix.Event) {
-		fmt.Println(ev.Sender + " invited bot to " + ev.RoomID)
-
+		log.Debugf("%s invited bot to %s", ev.Sender, ev.RoomID)
 		if ev.Content["membership"] == "invite" {
-
-			fmt.Println("Joining Room")
-
+			log.Debugf("Joining Room %s", ev.RoomID)
 			if resp, err := cli.JoinRoom(ev.RoomID, "", nil); err != nil {
-				panic(err)
+				log.Fatal(err)
 			} else {
-				fmt.Println(resp.RoomID)
+				log.Debugf("Joined room %s", resp.RoomID)
 			}
 		}
 	})
