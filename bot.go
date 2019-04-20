@@ -36,12 +36,22 @@ type CommandHandler struct {
 	Help string
 }
 
-func (bot *MatrixBot) getSenderPower(sender string) int {
-	// gomatrix: get "m.room.power_levels" type state event, parse it and find users->userID or use users_default if not found
+func (bot *MatrixBot) getUserPower(room, user string) int {
 
-	// getting the state event: client.StateEvent(room, type, stateKey)
-	//TODO
-	return 100
+	powerLevels := struct {
+		Users   map[string]int `json:"users"`
+		Default int            `json:"users_default"`
+	}{}
+
+	if err := bot.Client.StateEvent(room, "m.room.power_levels", "", &powerLevels); err != nil {
+		log.Fatal(err)
+	}
+
+	//Return the users power or the default user power, if not found
+	if power, ok := powerLevels.Users[user]; ok {
+		return power
+	}
+	return powerLevels.Default
 }
 
 //RegisterCommand allows to register a command to a handling function
@@ -67,10 +77,10 @@ func (bot *MatrixBot) handleCommands(message, room, sender string) {
 	for _, v := range bot.Handlers {
 		r, _ := regexp.Compile(v.Pattern)
 		if r.MatchString(message) {
-			if v.MinPower <= bot.getSenderPower(sender) {
+			if v.MinPower <= bot.getUserPower(room, sender) {
 				v.Handler(message, room, sender)
 			} else {
-				bot.SendToRoom(room, "You have not enough power to execute this command ("+v.Pattern+"). Your power: "+string(bot.getSenderPower(sender))+", requeired: "+string(v.MinPower))
+				bot.SendToRoom(room, "You have not enough power to execute this command ("+v.Pattern+"). Your power: "+string(bot.getUserPower(room, sender))+", requeired: "+string(v.MinPower))
 			}
 		}
 	}
@@ -138,6 +148,12 @@ func NewMatrixBot(user, pass string, name string) (*MatrixBot, error) {
 				log.Debugf("Joined room %s", resp.RoomID)
 			}
 		}
+	})
+
+	syncer.OnEventType("m.room.power_levels", func(ev *gomatrix.Event) {
+		log.Debug("got powerlevel event")
+		log.Debug(ev.Body())
+
 	})
 
 	bot.RegisterCommand("help", 0, "Display this help", bot.handleCommandHelp)
