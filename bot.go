@@ -49,8 +49,10 @@ func (bot *MatrixBot) getUserPower(room, user string) int {
 
 	//Return the users power or the default user power, if not found
 	if power, ok := powerLevels.Users[user]; ok {
+		log.Debugf("Found %s found in %v, his power is %v", user, powerLevels.Users, power)
 		return power
 	}
+	log.Debugf("User %s not found in %v", user, powerLevels.Users)
 	return powerLevels.Default
 }
 
@@ -62,7 +64,7 @@ func (bot *MatrixBot) RegisterCommand(pattern string, minpower int, help string,
 		Handler:  handler,
 		Help:     help,
 	}
-	log.Debugf("Registered command: %s", mbch.Pattern)
+	log.Debugf("Registered command: %s [%v]", mbch.Pattern, mbch.MinPower)
 	bot.Handlers = append(bot.Handlers, mbch)
 }
 
@@ -74,13 +76,15 @@ func (bot *MatrixBot) handleCommands(message, room, sender string) {
 		return
 	}
 
+	userPower := bot.getUserPower(room, sender)
+
 	for _, v := range bot.Handlers {
 		r, _ := regexp.Compile(v.Pattern)
 		if r.MatchString(message) {
 			if v.MinPower <= bot.getUserPower(room, sender) {
 				v.Handler(message, room, sender)
 			} else {
-				bot.SendToRoom(room, "You have not enough power to execute this command ("+v.Pattern+"). Your power: "+string(bot.getUserPower(room, sender))+", requeired: "+string(v.MinPower))
+				bot.SendToRoom(room, "You have not enough power to execute this command (!"+v.Pattern+").\nYour power: "+strconv.Itoa(userPower)+"\nRequired: "+strconv.Itoa(v.MinPower))
 			}
 		}
 	}
