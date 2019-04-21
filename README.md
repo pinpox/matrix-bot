@@ -1,4 +1,5 @@
-![Matrix](https://img.shields.io/matrix/matrix-bot:matrix.org.svg)
+![Matrix](https://img.shields.io/matrix/matrix-bot:matrix.org.svg?label=%23matrix-bot%3Amatrix.org)
+
 
 # matrix-bot
 BYOB (Build your own bot) - Build a matrix bot that acts on !commands
