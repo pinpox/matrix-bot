@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/binaryplease/matrix-bot.svg?branch=master)](https://travis-ci.org/binaryplease/matrix-bot)
+[![GoDoc](https://godoc.org/github.com/binaryplease/matrix-bot?status.svg)](https://godoc.org/github.com/binaryplease/matrix-bot)
+[![Go Report Card](https://goreportcard.com/badge/github.com/binaryplease/gitea-matrix-bot)](https://goreportcard.com/report/github.com/binaryplease/matrix-bot)
+[![codecov](https://codecov.io/gh/binaryplease/matrix-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/binaryplease/matrix-bot)
 ![Matrix](https://img.shields.io/matrix/matrix-bot:matrix.org.svg?label=%23matrix-bot%3Amatrix.org)
 
 
