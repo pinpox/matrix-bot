@@ -47,3 +47,5 @@ func (mybot *PingPongBot) handlePing(message, room, sender string) {
 }
 
 ```
+
+For a more complete example you can look at the [Gitea Matrix Bot](https://github.com/binaryplease/gitea-matrix-bot)
