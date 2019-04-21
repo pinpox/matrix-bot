@@ -1,3 +1,5 @@
+![Matrix](https://img.shields.io/matrix/matrix-bot:matrix.org.svg)
+
 # matrix-bot
 BYOB (Build your own bot) - Build a matrix bot that acts on !commands
 ![screenshot](scrot.png "Screenshot")
