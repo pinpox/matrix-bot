@@ -116,11 +116,11 @@ func (bot *MatrixBot) Sync() {
 }
 
 //NewMatrixBot creates a new bot form user credentials
-func NewMatrixBot(user, pass string, name string) (*MatrixBot, error) {
+func NewMatrixBot(user, pass string, host, name string) (*MatrixBot, error) {
 
 	log.Infof("Logging in as %s", user)
 
-	cli, _ := gomatrix.NewClient("http://matrix.org", "", "")
+	cli, _ := gomatrix.NewClient(host, "", "")
 
 	resp, err := cli.Login(&gomatrix.ReqLogin{
 		Type:     "m.login.password",
