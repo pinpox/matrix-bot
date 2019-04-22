@@ -84,15 +84,25 @@ func (bot *MatrixBot) handleCommands(message, room, sender string) {
 			if v.MinPower <= bot.getUserPower(room, sender) {
 				v.Handler(message, room, sender)
 			} else {
-				bot.SendToRoom(room, "You have not enough power to execute this command (!"+v.Pattern+").\nYour power: "+strconv.Itoa(userPower)+"\nRequired: "+strconv.Itoa(v.MinPower))
+				bot.SendTextToRoom(room, "You have not enough power to execute this command (!"+v.Pattern+").\nYour power: "+strconv.Itoa(userPower)+"\nRequired: "+strconv.Itoa(v.MinPower))
 			}
 		}
 	}
 }
 
-//SendToRoom sends a message to a specified room
-func (bot *MatrixBot) SendToRoom(room, message string) {
-	_, err := bot.Client.SendText(room, message)
+//SendHTMLToRoom sends a formattet message to a specified room
+func (bot *MatrixBot) SendHTMLToRoom(room, message, messageAlt string) {
+	bot.Client.SendMessageEvent(room, "m.room.message", gomatrix.HTMLMessage{
+		Body:          messageAlt,
+		MsgType:       "m.notice",
+		Format:        "org.matrix.custom.html",
+		FormattedBody: message,
+	})
+}
+
+//SendTextToRoom sends a plain-text message to a specified room
+func (bot *MatrixBot) SendTextToRoom(room, message string) {
+	_, err := bot.Client.SendNotice(room, message)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -176,5 +186,5 @@ Command			Power required		Explanation
 		helpMsg = helpMsg + "\n!" + v.Pattern + "\t\t\t[" + strconv.Itoa(v.MinPower) + "]\t\t\t\t\t" + v.Help
 	}
 
-	bot.SendToRoom(room, helpMsg)
+	bot.SendTextToRoom(room, helpMsg)
 }

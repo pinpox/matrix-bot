@@ -140,7 +140,7 @@ func TestMatrixBot_SendToRoom(t *testing.T) {
 				Handlers:   tt.fields.Handlers,
 				Name:       tt.fields.Name,
 			}
-			bot.SendToRoom(tt.args.room, tt.args.message)
+			bot.SendTextToRoom(tt.args.room, tt.args.message)
 		})
 	}
 }
