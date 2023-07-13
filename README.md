@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/binaryplease/matrix-bot.svg?branch=master)](https://travis-ci.org/binaryplease/matrix-bot)
-[![GoDoc](https://godoc.org/github.com/binaryplease/matrix-bot?status.svg)](https://godoc.org/github.com/binaryplease/matrix-bot)
-[![Go Report Card](https://goreportcard.com/badge/github.com/binaryplease/gitea-matrix-bot)](https://goreportcard.com/report/github.com/binaryplease/matrix-bot)
-[![codecov](https://codecov.io/gh/binaryplease/matrix-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/binaryplease/matrix-bot)
+[![Build Status](https://travis-ci.org/pinpox/matrix-bot.svg?branch=master)](https://travis-ci.org/pinpox/matrix-bot)
+[![GoDoc](https://godoc.org/github.com/pinpox/matrix-bot?status.svg)](https://godoc.org/github.com/pinpox/matrix-bot)
+[![Go Report Card](https://goreportcard.com/badge/github.com/pinpox/gitea-matrix-bot)](https://goreportcard.com/report/github.com/pinpox/matrix-bot)
+[![codecov](https://codecov.io/gh/pinpox/matrix-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/pinpox/matrix-bot)
 ![Matrix](https://img.shields.io/matrix/matrix-bot:matrix.org.svg?label=%23matrix-bot%3Amatrix.org)
 
 
@@ -17,7 +17,7 @@ After starting it, you can invite it to any matrix room and it will join.
 ```go
 package main
 
-import 	"github.com/binaryplease/matrix-bot"
+import 	"github.com/pinpox/matrix-bot"
 
 // PingPongBot is a custom bot that will reply to !ping with "pong"
 type PingPongBot struct {
@@ -52,4 +52,4 @@ func (mybot *PingPongBot) handlePing(message, room, sender string) {
 
 ```
 
-For a more complete example you can look at the [Gitea Matrix Bot](https://github.com/binaryplease/gitea-matrix-bot)
+For a more complete example you can look at the [Gitea Matrix Bot](https://github.com/pinpox/gitea-matrix-bot)
